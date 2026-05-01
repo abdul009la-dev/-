@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Печка Уста | Мастер печник</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fire: #E8531A;
+    --ember: #C23B00;
+    --gold: #F5A623;
+    --dark: #1A0F08;
+    --smoke: #3D2B1F;
+    --cream: #F9F0E6;
+    --ash: #B8A99A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Raleway', sans-serif;
+    background: var(--dark);
+    color: var(--cream);
+    overflow-x: hidden;
+  }
+
+  .hero {
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 80%, #5C1F00 0%, #1A0F08 70%);
+  }
+
+  .fire-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 50% 100%, rgba(232,83,26,0.35) 0%, transparent 70%),
+      radial-gradient(ellipse 30% 20% at 50% 100%, rgba(245,166,35,0.25) 0%, transparent 50%);
+    animation: flicker 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes flicker {
+    0%   { opacity: 0.8; transform: scaleX(1); }
+    50%  { opacity: 1;   transform: scaleX(1.03); }
+    100% { opacity: 0.85; transform: scaleX(0.97); }
+  }
+
+  .sparks {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .spark {
+    position: absolute;
+    bottom: 0;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: rise var(--dur, 4s) ease-out var(--delay, 0s) infinite;
+    left: var(--left, 50%);
+    opacity: 0;
+  }
+
+  @keyframes rise {
+    0%   { transform: translateY(0) scale(1);   opacity: 1; }
+    80%  { opacity: 0.6; }
+    100% { transform: translateY(-80vh) scale(0); opacity: 0; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 2rem;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    border: 1px solid var(--fire);
+    color: var(--fire);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    padding: 0.4rem 1.2rem;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    animation: fadeUp 0.9s 0.1s ease both;
+  }
+
+  .hero h1 span { color: var(--fire); }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    font-weight: 300;
+    color: var(--ash);
+    margin-bottom: 0.5rem;
+    animation: fadeUp 1s 0.2s ease both;
+  }
+
+  .hero-sub2 {
+    font-size: clamp(0.85rem, 1.8vw, 1.1rem);
+    color: var(--ash);
+    margin-bottom: 2.5rem;
+    animation: fadeUp 1s 0.25s ease both;
+  }
+
+  .hero-cta {
+    display: inline-block;
+    background: var(--fire);
+    color: #fff;
+    padding: 1rem 2.5rem;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+    animation: fadeUp 1s 0.35s ease both;
+  }
+
+  .hero-cta:hover {
+    background: var(--gold);
+    color: var(--dark);
+    transform: translateY(-2px);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--ash);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    animation: bob 2s ease-in-out infinite;
+  }
+
+  .scroll-hint::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--ash), transparent);
+  }
+
+  @keyframes bob {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%       { transform: translateX(-50%) translateY(6px); }
+  }
+
+  .divider {
+    height: 4px;
+    background: linear-gradient(to right, transparent, var(--fire), var(--gold), var(--fire), transparent);
+  }
+
+  section { padding: 6rem 1.5rem; }
+
+  .section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--fire);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+  }
+
+  .section-title span { color: var(--fire); }
+
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  .services { background: #120A05; }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .service-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(232,83,26,0.2);
+    padding: 2rem 1.75rem;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--fire), var(--gold));
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+
+  .service-card:hover {
+    border-color: var(--fire);
+    transform: translateY(-4px);
+  }
+
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .service-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .service-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .service-card p {
+    color: var(--ash);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .why { background: var(--dark); }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .why-item {
+    text-align: center;
+    padding: 1.5rem 1rem;
+  }
+
+  .why-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    font-weight: 900;
+    color: var(--fire);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .why-item h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .why-item p {
+    color: var(--ash);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  .gallery { background: #120A05; }
+
+  .gallery-note {
+    color: var(--ash);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .gallery-item {
+    aspect-ratio: 4/3;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid rgba(232,83,26,0.25);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    transition: transform 0.3s, border-color 0.3s;
+    position: relative;
+  }
+
+  .gallery-item:hover {
+    transform: scale(1.03);
+    border-color: var(--fire);
+  }
+
+  .contact { background: var(--dark); }
+
+  .contact-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  @media (max-width: 700px) {
+    .contact-wrap { grid-template-columns: 1fr; gap: 2.5rem; }
+    .master-grid { grid-template-columns: 1fr !important; }
+  }
+
+  .contact-info p {
+    color: var(--ash);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  .contact-links { display: flex; flex-direction: column; gap: 1rem; }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--cream);
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.2s;
+  }
+
+  .contact-link:hover { color: var(--fire); }
+
+  .cl-icon {
+    width: 42px; height: 42px;
+    border: 1px solid rgba(232,83,26,0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .contact-link:hover .cl-icon {
+    border-color: var(--fire);
+    background: rgba(232,83,26,0.1);
+  }
+
+  .form-group { margin-bottom: 1.25rem; }
+
+  .form-group label {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ash);
+    margin-bottom: 0.4rem;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--cream);
+    padding: 0.85rem 1rem;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    border-color: var(--fire);
+  }
+
+  .form-group textarea { min-height: 110px; resize: vertical; }
+
+  .form-group select option { background: var(--smoke); }
+
+  .btn-submit {
+    width: 100%;
+    background: var(--fire);
+    color: #fff;
+    border: none;
+    padding: 1rem;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .btn-submit:hover {
+    background: var(--gold);
+    color: var(--dark);
+    transform: translateY(-2px);
+  }
+
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 2rem;
+    color: var(--gold);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+  }
+
+  footer {
+    background: #0D0700;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    color: var(--ash);
+    font-size: 0.8rem;
+    border-top: 1px solid rgba(232,83,26,0.15);
+  }
+
+  footer strong { color: var(--fire); }
+
+  .lang-toggle {
+    position: fixed;
+    top: 1.2rem; right: 1.5rem;
+    z-index: 100;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .lang-btn {
+    background: rgba(26,15,8,0.85);
+    border: 1px solid rgba(232,83,26,0.4);
+    color: var(--cream);
+    padding: 0.35rem 0.75rem;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s;
+    backdrop-filter: blur(6px);
+  }
+
+  .lang-btn.active, .lang-btn:hover {
+    background: var(--fire);
+    border-color: var(--fire);
+  }
+
+  body.ky [data-ru],
+  body.ru [data-ky] {
+    display: none;
+  }
+</style>
+</head>
+<body class="ky">
+
+<div class="lang-toggle">
+  <button class="lang-btn active" onclick="setLang('ky')">KG</button>
+  <button class="lang-btn" onclick="setLang('ru')">RU</button>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="fire-bg"></div>
+  <div class="sparks" id="sparks"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span data-ky>Кыргызстан • Кол иш • Сапат</span>
+      <span data-ru>Кыргызстан • Ручная работа • Качество</span>
+    </div>
+    <h1>
+      <span data-ky>Печка<br><span style="color:var(--gold)">Уста</span></span>
+      <span data-ru>Мастер<br><span style="color:var(--gold)">Печник</span></span>
+    </h1>
+    <p class="hero-sub">
+      <span data-ky>Жылуулук берген кол өнөрчүлүк</span>
+      <span data-ru>Мастерство, дарящее тепло</span>
+    </p>
+    <p class="hero-sub2">
+      <span data-ky>Печка, мештер, камин — сапаттуу курулуш жана оңдоо</span>
+      <span data-ru>Печи, мангалы, камины — качественное строительство и ремонт</span>
+    </p>
+    <a href="#contact" class="hero-cta">
+      <span data-ky>Заказ бер</span>
+      <span data-ru>Оставить заявку</span>
+    </a>
+  </div>
+  <div class="scroll-hint">
+    <span data-ky>Ылдый</span>
+    <span data-ru>Вниз</span>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Services -->
+<section class="services">
+  <div class="container">
+    <p class="section-label">
+      <span data-ky>Кызматтар</span>
+      <span data-ru>Услуги</span>
+    </p>
+    <h2 class="section-title">
+      <span data-ky>Эмне жасайбыз?</span>
+      <span data-ru>Что мы делаем?</span>
+    </h2>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">🧱</div>
+        <h3 data-ky>Жаңы печка куруу</h3>
+        <h3 data-ru>Кладка новой печи</h3>
+        <p data-ky>Нөлдөн баштап жылытуучу же бышыруучу печка куруп беребиз. Сапаттуу кирпич жана материалдар колдонулат.</p>
+        <p data-ru>Строим отопительные и варочные печи с нуля. Используем качественный кирпич и материалы.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🔨</div>
+        <h3 data-ky>Эски печканы бузуп башынан куруу</h3>
+        <h3 data-ru>Снос и перекладка старой печи</h3>
+        <p data-ky>Эски, иштебей калган печканы бузуп, жаңыдан сапаттуу курабыз. Жылуулук жакшырат, отун азаят.</p>
+        <p data-ru>Демонтируем старую, неработающую печь и строим заново. Улучшенный обогрев, экономия дров.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🔥</div>
+        <h3 data-ky>Үч очок куруу</h3>
+        <h3 data-ru>Кладка трёхочагового очага</h3>
+        <p data-ky>Бир мезгилде үч жерде от жагууга мүмкүн болгон үч очок — ири үйлөргө жана мейманканаларга идеалдуу.</p>
+        <p data-ru>Трёхочаговый очаг для одновременного использования в трёх местах — идеально для больших домов.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why us -->
+<section class="why">
+  <div class="container">
+    <p class="section-label">
+      <span data-ky>Биз жөнүндө</span>
+      <span data-ru>О нас</span>
+    </p>
+    <h2 class="section-title">
+      <span data-ky>Эмне үчүн <span>биз</span>?</span>
+      <span data-ru>Почему <span>мы</span>?</span>
+    </h2>
+    <div class="why-grid">
+      <div class="why-item">
+        <div class="why-num">10+</div>
+        <h4 data-ky>Жыл тажрыйба</h4>
+        <h4 data-ru>Лет опыта</h4>
+        <p data-ky>Печка куруп иштеп жаткан 10 жыл ашык болду</p>
+        <p data-ru>Более 10 лет строим и ремонтируем печи</p>
+      </div>
+      <div class="why-item">
+        <div class="why-num">100+</div>
+        <h4 data-ky>Бүтүрүлгөн очок</h4>
+        <h4 data-ru>Готовых очагов</h4>
+        <p data-ky>100дөн ашык толук бүтүрүлгөн очок печка — баары ыраазы</p>
+        <p data-ru>Более 100 полностью завершённых очагов — все довольны</p>
+      </div>
+      <div class="why-item">
+        <div class="why-num">5★</div>
+        <h4 data-ky>Сапат кепилдиги</h4>
+        <h4 data-ru>Гарантия качества</h4>
+        <p data-ky>Иш аяктагандан кийин гарантия берилет</p>
+        <p data-ru>Даём гарантию на все выполненные работы</p>
+      </div>
+      <div class="why-item">
+        <div class="why-num">💯</div>
+        <h4 data-ky>Адал баа</h4>
+        <h4 data-ru>Честная цена</h4>
+        <p data-ky>Жашыруун кошумча акы жок, баасы алдын ала белгиленет</p>
+        <p data-ru>Никаких скрытых платежей, цена оговаривается заранее</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Master profile -->
+<section class="services" id="master">
+  <div class="container">
+    <p class="section-label">
+      <span data-ky>Уста жөнүндө</span>
+      <span data-ru>О мастере</span>
+    </p>
+    <h2 class="section-title">
+      <span data-ky><span>Нурланбек</span> Сулайманов</span>
+      <span data-ru><span>Нурланбек</span> Сулайманов</span>
+    </h2>
+    <div style="display:grid;grid-template-columns:1fr 2fr;gap:3rem;align-items:start;" class="master-grid">
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(232,83,26,0.25);padding:2.5rem;text-align:center;">
+        <div style="font-size:5rem;margin-bottom:1rem">👷</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:0.5rem;">Сулайманов Нурланбек</div>
+        <div style="color:var(--fire);font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1.5rem;">
+          <span data-ky>Печка куруучу уста</span>
+          <span data-ru>Мастер-печник</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+          <div style="background:rgba(232,83,26,0.1);border:1px solid rgba(232,83,26,0.3);padding:0.6rem 1rem;font-size:0.85rem;">
+            <span style="color:var(--gold)">⏱</span>
+            <span data-ky> 10+ жыл тажрыйба</span>
+            <span data-ru> 10+ лет опыта</span>
+          </div>
+          <div style="background:rgba(232,83,26,0.1);border:1px solid rgba(232,83,26,0.3);padding:0.6rem 1rem;font-size:0.85rem;">
+            <span style="color:var(--gold)">🏆</span>
+            <span data-ky> 100+ бүтүрүлгөн иш</span>
+            <span data-ru> 100+ завершённых работ</span>
+          </div>
+          <div style="background:rgba(232,83,26,0.1);border:1px solid rgba(232,83,26,0.3);padding:0.6rem 1rem;font-size:0.85rem;">
+            <span style="color:var(--gold)">✅</span>
+            <span data-ky> Гарантия берилет</span>
+            <span data-ru> Гарантия на работу</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p style="color:var(--ash);line-height:1.9;font-size:1rem;margin-bottom:1.5rem;" data-ky>
+          Мен — Сулайманов Нурланбек, печка куруу боюнча 10 жылдан ашык тажрыйбасы бар уста. Ушул убакыттын ичинде 100дөн ашык очок жана печка курдум — баардык кардарлар ыраазы болуп кетти.
+        </p>
+        <p style="color:var(--ash);line-height:1.9;font-size:1rem;margin-bottom:1.5rem;" data-ru>
+          Я — Сулайманов Нурланбек, мастер-печник с опытом более 10 лет. За это время я построил более 100 очагов и печей — все клиенты остались довольны качеством работы.
+        </p>
+        <p style="color:var(--ash);line-height:1.9;font-size:1rem;margin-bottom:1.5rem;" data-ky>
+          Жаңы печка курудумбу, эскисин бузуп жаңыдан курдумбу же үч очок жасадымбы — ар биринин өз мыкты жолу бар. Ар бир жумушка жоопкерчилик менен карайм жана гарантия берем.
+        </p>
+        <p style="color:var(--ash);line-height:1.9;font-size:1rem;" data-ru>
+          Строю ли новую печь, демонтирую и перекладываю старую или сооружаю трёхочаговый очаг — к каждой работе подхожу ответственно и даю гарантию на результат.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Pricing -->
+<section class="why" id="pricing">
+  <div class="container">
+    <p class="section-label">
+      <span data-ky>Баасы</span>
+      <span data-ru>Цены</span>
+    </p>
+    <h2 class="section-title">
+      <span data-ky>Иштин <span>баасы</span></span>
+      <span data-ru><span>Стоимость</span> работ</span>
+    </h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:2.5rem;">
+      <div style="background:rgba(232,83,26,0.07);border:1px solid var(--fire);padding:2rem 1.5rem;position:relative;overflow:hidden;">
+        <div style="font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--fire);margin-bottom:1rem;">
+          <span data-ky>Үч очок</span>
+          <span data-ru>Трёхочаговый очаг</span>
+        </div>
+        <div style="font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:900;color:var(--gold);line-height:1;">15 000</div>
+        <div style="color:var(--gold);font-size:1rem;margin-bottom:1.5rem;">сом</div>
+        <p style="color:var(--ash);font-size:0.9rem;line-height:1.7;" data-ky>Үч очок куруу. Жумуш баасы материалсыз.</p>
+        <p style="color:var(--ash);font-size:0.9rem;line-height:1.7;" data-ru>Кладка трёхочагового очага. Стоимость без материалов.</p>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(to right,var(--gold),var(--fire));"></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(232,83,26,0.25);padding:2rem 1.5rem;position:relative;overflow:hidden;">
+        <div style="font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--ash);margin-bottom:1rem;">
+          <span data-ky>Эски үй</span>
+          <span data-ru>Старый дом</span>
+        </div>
+        <div style="font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:900;color:var(--fire);line-height:1;">15 000</div>
+        <div style="color:var(--gold);font-size:1rem;margin-bottom:1.5rem;">сом</div>
+        <p style="color:var(--ash);font-size:0.9rem;line-height:1.7;" data-ky>Эски үйлөрдөгү печка куруу же алмаштыруу. Жумуш баасы материалсыз.</p>
+        <p style="color:var(--ash);font-size:0.9rem;line-height:1.7;" data-ru>Кладка или замена печи в старых домах. Стоимость без материалов.</p>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(to right,var(--fire),var(--gold));"></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(232,83,26,0.35);padding:2rem 1.5rem;position:relative;overflow:hidden;">
+        <div style="font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--ash);margin-bottom:1rem;">
+          <span data-ky>Жаңы үй</span>
+          <span data-ru>Новый дом</span>
+        </div>
+        <div style="font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:900;color:var(--fire);line-height:1;">18 000</div>
+        <div style="color:var(--gold);font-size:1rem;margin-bottom:1.5rem;">сом</div>
+        <p style="color:var(--ash);font-size:0.9rem;line-height:1.7;" data-ky>Жаңы үйлөргө арналган печка куруу. Жумуш баасы материалсыз.</p>
+        <p style="color:var(--ash);font-size:0.9rem;line-height:1.7;" data-ru>Кладка печи в новых домах. Стоимость без материалов.</p>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(to right,var(--fire),var(--gold));"></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(232,83,26,0.25);padding:2rem 1.5rem;position:relative;overflow:hidden;">
+        <div style="font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--ash);margin-bottom:1rem;">
+          <span data-ky>Кепилдик</span>
+          <span data-ru>Гарантия</span>
+        </div>
+        <div style="font-size:3rem;margin-bottom:0.5rem;">🛡️</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;margin-bottom:1rem;" data-ky>Гарантия берилет</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;margin-bottom:1rem;" data-ru>Гарантия на работу</div>
+        <p style="color:var(--ash);font-size:0.9rem;line-height:1.7;" data-ky>Бардык иштерге гарантия берилет. Кандайдыр бир көйгөй чыкса — акысыз оңдоп беребиз.</p>
+        <p style="color:var(--ash);font-size:0.9rem;line-height:1.7;" data-ru>На все работы даётся гарантия. Если возникнут проблемы — исправим бесплатно.</p>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(to right,var(--fire),var(--gold));"></div>
+      </div>
+    </div>
+    <p style="color:var(--ash);font-size:0.8rem;margin-top:1.5rem;text-align:center;" data-ky>* Баа иштин баасы гана. Материалдар кардар тарабынан же кошумча макулдашуу менен.</p>
+    <p style="color:var(--ash);font-size:0.8rem;margin-top:1.5rem;text-align:center;" data-ru>* Указана только стоимость работы. Материалы — за счёт заказчика или по отдельной договорённости.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Gallery: Үч очок -->
+<section class="gallery" id="gallery-uch">
+  <div class="container">
+    <p class="section-label">
+      <span data-ky>Иштерибиз</span>
+      <span data-ru>Наши работы</span>
+    </p>
+    <h2 class="section-title">
+      <span data-ky>Үч <span>очок</span></span>
+      <span data-ru>Трёхочаговые <span>очаги</span></span>
+    </h2>
+    <p class="gallery-note" data-ky>Биз курган үч очоктор.</p>
+    <p class="gallery-note" data-ru>Построенные нами трёхочаговые очаги.</p>
+    <div class="gallery-grid">
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/BVrFpzgb/IMG-20260501-WA0000.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/wZnzV4L3/IMG-20260501-WA0003.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/YnhMCbk/IMG-20260501-WA0001.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/qMCY6wBx/IMG-20260501-WA0004.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/XZL9Nc99/IMG-20260501-WA0002.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/Hf2gVJtS/IMG-20260501-WA0005.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/QFc1vXM4/IMG-20260501-WA0006.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/8DvbVpSX/IMG-20260501-WA0007.webp')"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Gallery: Печка -->
+<section class="gallery" id="gallery-pech" style="background:#0f0703;">
+  <div class="container">
+    <h2 class="section-title">
+      <span data-ky><span>Печка</span>лар</span>
+      <span data-ru><span>Печи</span></span>
+    </h2>
+    <p class="gallery-note" data-ky>Биз курган печкалар.</p>
+    <p class="gallery-note" data-ru>Построенные нами печи.</p>
+    <div class="gallery-grid">
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/NnNFQXj4/IMG-20260501-WA0008.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/7xw4npr2/IMG-20260501-WA0009.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/nsKRSrWh/IMG-20260501-WA0010.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/tPZBCymh/IMG-20260501-WA0011.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/C31wMkw7/IMG-20260501-WA0012.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/CRFMPSv/IMG-20260501-WA0013.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/chykzS4K/IMG-20260501-WA0015.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/tpHMv0xW/IMG-20260501-WA0016.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/G3FygTqR/IMG-20260501-WA0014.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/k2sdk3DG/IMG-20260501-WA0017.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/5Xg6dj2v/IMG-20260501-WA0019.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/mFGY7WQd/IMG-20260501-WA0020.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/Rpd0gCLW/IMG-20260501-WA0021.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/xt2D3Wt9/IMG-20260501-WA0018.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/jZ4cqvgH/IMG-20260501-WA0022.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/ZDGcB6c/IMG-20260501-WA0023.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/gZ3YdVYv/IMG-20260501-WA0025.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/0Sxr8dh/IMG-20260501-WA0024.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/PzvXxw9y/IMG-20260501-WA0026.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/QvPTmc11/IMG-20260501-WA0027.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/ycmcW6QG/IMG-20260501-WA0028.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/cXZMKj76/IMG-20260501-WA0029.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/vxgP8Zpf/IMG-20260501-WA0030.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/23y0YpGv/IMG-20260501-WA0031.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/DDPhbSn3/IMG-20260501-WA0032.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/LDsHGg2P/IMG-20260501-WA0033.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/5X14YTQ1/IMG-20260501-WA0034.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/0ycTV29h/IMG-20260501-WA0035.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/ymRmP4N9/IMG-20260501-WA0036.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/CKQNJ64b/IMG-20260501-WA0037.webp')"></div>
+      <div class="gallery-item" style="background-image:url('https://i.ibb.co/vC9zzCz7/IMG-20260501-WA0038.webp')"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="contact" id="contact">
+  <div class="container">
+    <p class="section-label">
+      <span data-ky>Байланыш</span>
+      <span data-ru>Контакты</span>
+    </p>
+    <h2 class="section-title">
+      <span data-ky><span>Заказ</span> бер</span>
+      <span data-ru>Оставить <span>заявку</span></span>
+    </h2>
+    <div class="contact-wrap">
+      <div class="contact-info">
+        <p data-ky>Телефон аркылуу же форма аркылуу заказ калтырсаңыз болот. Биз сиз менен байланышабыз.</p>
+        <p data-ru>Вы можете позвонить или оставить заявку через форму. Мы свяжемся с вами в ближайшее время.</p>
+        <div class="contact-links">
+          <a href="tel:+996505405844" class="contact-link">
+            <div class="cl-icon">📞</div>
+            <div>
+              <div style="font-size:0.7rem;color:var(--ash);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:2px" data-ky>Телефон</div>
+              <div style="font-size:0.7rem;color:var(--ash);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:2px" data-ru>Телефон</div>
+              +996 505 405 844
+            </div>
+          </a>
+          <a href="https://wa.me/996505405844" class="contact-link">
+            <div class="cl-icon">💬</div>
+            <div>
+              <div style="font-size:0.7rem;color:var(--ash);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:2px">WhatsApp</div>
+              +996 505 405 844
+            </div>
+          </a>
+          <a href="#" class="contact-link">
+            <div class="cl-icon">📍</div>
+            <div>
+              <div style="font-size:0.7rem;color:var(--ash);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:2px" data-ky>Жайгашкан жер</div>
+              <div style="font-size:0.7rem;color:var(--ash);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:2px" data-ru>Местоположение</div>
+              <span data-ky>Жалал-Абад облусу Сузак району Ак-Тоок айылы</span>
+              <span data-ru>Жалал-Абадская область Сузакский район Село Ак-Тоок</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <form id="orderForm" onsubmit="submitForm(event)">
+          <div class="form-group">
+            <label>
+              <span data-ky>Атыңыз</span>
+              <span data-ru>Ваше имя</span>
+            </label>
+            <input type="text" required placeholder="…">
+          </div>
+          <div class="form-group">
+            <label>
+              <span data-ky>Телефон номер</span>
+              <span data-ru>Номер телефона</span>
+            </label>
+            <input type="tel" required placeholder="+996 …">
+          </div>
+          <div class="form-group">
+            <label>
+              <span data-ky>Кызмат түрү</span>
+              <span data-ru>Тип услуги</span>
+            </label>
+            <select required>
+              <option value="" disabled selected>—</option>
+              <option value="new" data-ky>Жаңы печка куруу</option>
+              <option value="new" data-ru>Кладка новой печи</option>
+              <option value="rebuild" data-ky>Эски печканы бузуп башынан куруу</option>
+              <option value="rebuild" data-ru>Снос и перекладка старой печи</option>
+              <option value="tri" data-ky>Үч очок куруу</option>
+              <option value="tri" data-ru>Трёхочаговый очаг</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>
+              <span data-ky>Кошумча маалымат</span>
+              <span data-ru>Дополнительно</span>
+            </label>
+            <textarea placeholder="…"></textarea>
+          </div>
+          <button type="submit" class="btn-submit">
+            <span data-ky>Жиберүү →</span>
+            <span data-ru>Отправить →</span>
+          </button>
+        </form>
+        <div class="form-success" id="formSuccess">
+          <div style="font-size:2.5rem;margin-bottom:1rem">🔥</div>
+          <span data-ky>Рахмат! Жакында байланышабыз.</span>
+          <span data-ru>Спасибо! Скоро свяжемся с вами.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span data-ky>© 2025 <strong>Печка Уста</strong> — Бардык укуктар корголгон</span>
+  <span data-ru>© 2025 <strong>Мастер Печник</strong> — Все права защищены</span>
+</footer>
+
+<script>
+  // Sparks animation
+  const sparksEl = document.getElementById('sparks');
+  for (let i = 0; i < 18; i++) {
+    const s = document.createElement('div');
+    s.className = 'spark';
+    s.style.setProperty('--left', (20 + Math.random() * 60) + '%');
+    s.style.setProperty('--dur', (3 + Math.random() * 4) + 's');
+    s.style.setProperty('--delay', (Math.random() * 5) + 's');
+    sparksEl.appendChild(s);
+  }
+
+  // Language toggle
+  function setLang(lang) {
+    document.body.className = lang;
+    document.querySelectorAll('.lang-btn').forEach((btn, i) => {
+      btn.classList.toggle('active', (i === 0 && lang === 'ky') || (i === 1 && lang === 'ru'));
+    });
+  }
+
+  // Form submit → WhatsApp
+  function submitForm(e) {
+    e.preventDefault();
+    const form = e.target;
+
+    // Получить значения полей
+    const nameInput = form.querySelector('input[type="text"]');
+    const phoneInput = form.querySelector('input[type="tel"]');
+    const serviceSelect = form.querySelector('select');
+    const extraTextarea = form.querySelector('textarea');
+
+    const name = nameInput ? nameInput.value.trim() : '';
+    const phone = phoneInput ? phoneInput.value.trim() : '';
+    const service = serviceSelect ? serviceSelect.value : '';
+    const extra = extraTextarea ? extraTextarea.value.trim() : '';
+
+    // Определить язык
+    const lang = document.body.classList.contains('ru') ? 'ru' : 'ky';
+
+    // Сформировать текст сообщения
+    let message = '';
+    if (lang === 'ky') {
+      message = `Салам! Менин атым ${name}. Телефонум: ${phone}. Кызмат: ${service}.`;
+      if (extra) message += ` Кошумча: ${extra}`;
+    } else {
+      message = `Здравствуйте! Меня зовут ${name}. Телефон: ${phone}. Услуга: ${service}.`;
+      if (extra) message += ` Дополнительно: ${extra}`;
+    }
+
+    // Открыть WhatsApp
+    const whatsappNumber = '996505405844'; // без +
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+
+    // Показать сообщение об успехе
+    form.style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  }
+</script>
+</body>
+</html>
